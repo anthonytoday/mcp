@@ -130,7 +130,7 @@ export async function allSales(env, filters = {}, maxPages = 40) {
  *     product count the API offers.
  *  3. GET /products/:key resolves a product id or a *default* permalink
  *     ("afwzv") and returns "product not found" for a *custom* permalink
- *     ("CPA-Exam-Study-Plan"), which is what /user hands back for every
+ *     ("My-Custom-Permalink"), which is what /user hands back for every
  *     product that has one.
  *
  * The bridge is /sales: every sale carries product_id next to the default
@@ -149,20 +149,16 @@ const DEFAULT_BUDGET = 42;
 const DEFAULT_PERMALINK = /^[a-z0-9]{4,8}$/;
 
 /**
- * Ids for products the API cannot surface on its own.
+ * Ids for products the API cannot surface on its own, keyed by permalink.
  *
  * A product that carries a custom permalink, sits outside the 10 newest and
  * has never sold is invisible three ways over: GET /products hides it, GET
  * /products/:custom-permalink returns "not found", and no sale exists to carry
- * its id. Seed your own here, or at runtime through gumroad_seed_product_ids,
- * which persists to KV. The entries below are the author's and are used only
- * as lookup keys; every field is still fetched fresh.
+ * its id. Either seed such ids here before deploying, or at runtime through
+ * gumroad_seed_product_ids, which persists them to KV. The id is the string in
+ * the dashboard URL at app.gumroad.com/products/<id>/edit.
  */
-const BOOTSTRAP_IDS = {
-  'CFA-Exam-study-plan': 'glZzGl1z8szth8nGUWR_Dw==',
-  'AQA-Chemistry-Flashcards': 'vQUYu5J6_vr8YhzZzQbI2Q==',
-  'AQA-Psychology-Flashcards': 'uQ_H2Y5mJxYKmAUz5I1ibw==',
-};
+export const BOOTSTRAP_IDS = {};
 
 const EMPTY_INDEX = () => ({ byPermalink: {}, products: {}, salesCursor: null, salesDone: false, updated_at: null });
 

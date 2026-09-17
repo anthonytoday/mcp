@@ -1,6 +1,6 @@
 # mcp
 
-Custom MCP servers and Cloudflare Workers behind [anthonytoday.com](https://www.anthonytoday.com/mcp/), open-sourced so others can reuse them. Everything here runs on Cloudflare Workers, holds its credentials as Worker secrets, and is reachable from Claude either as an MCP connector or as a webhook target.
+Custom MCP servers and Cloudflare Workers built to run a small consulting and digital-products business from Claude, open-sourced so others can reuse them. Everything here runs on Cloudflare Workers, holds its credentials as Worker secrets, and is reachable from Claude either as an MCP connector or as a webhook target.
 
 | Folder | Kind | What it does |
 | --- | --- | --- |
@@ -32,7 +32,7 @@ Claude's own sandbox cannot reach third-party APIs directly, but it can call an 
 
 ## Author
 
-Anthony Kieffer, Notion Certified Consultant and cybersecurity advisor (CISSP, ISO 27001 Lead Implementer, PMP). Dubai. [anthonytoday.com](https://www.anthonytoday.com) · [LinkedIn](https://www.linkedin.com/in/anthony-kieffer/)
+Anthony Kieffer, Notion Certified Consultant and cybersecurity advisor. [anthonytoday.com](https://www.anthonytoday.com) · [LinkedIn](https://www.linkedin.com/in/anthony-kieffer/)
 
 ## License
 
