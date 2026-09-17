@@ -272,15 +272,15 @@ await t('the catalog comes from /user, not the 10-item /products cap', async () 
 await t('a custom permalink is never fetched directly, because Gumroad 404s it', async () => {
   calls.length = 0;
   shop({
-    links: ['CPA-Exam-Study-Plan'],
+    links: ['My-Custom-Permalink'],
     products: [],
     sales: [{ product_id: 'pX', product_permalink: 'zzzzz' }],
-    byKey: { pX: prod('pX', 'zzzzz', { custom_permalink: 'CPA-Exam-Study-Plan' }) },
+    byKey: { pX: prod('pX', 'zzzzz', { custom_permalink: 'My-Custom-Permalink' }) },
   });
   const out = await findTool('gumroad_list_products').handler(ENV, {});
   assert.equal(out.coverage.complete, true);
   assert.equal(out.count, 1);
-  assert.ok(!calls.some((c) => c.url.includes('CPA-Exam-Study-Plan')), 'must not GET a custom permalink');
+  assert.ok(!calls.some((c) => c.url.includes('My-Custom-Permalink')), 'must not GET a custom permalink');
 });
 
 await t('the sales walk resolves what /products hides', async () => {
@@ -416,10 +416,9 @@ await t('an id referenced inside another product is mined, not missed', async ()
 
 await t('every bootstrapped id resolves to the permalink it claims', async () => {
   calls.length = 0;
-  const { allProducts } = await import('./src/gumroad.js');
-  const links = ['CFA-Exam-study-plan', 'AQA-Chemistry-Flashcards', 'AQA-Psychology-Flashcards'];
-  const ids = ['glZzGl1z8szth8nGUWR_Dw==', 'vQUYu5J6_vr8YhzZzQbI2Q==', 'uQ_H2Y5mJxYKmAUz5I1ibw=='];
-  const byKey = Object.fromEntries(ids.map((id, i) => [id, prod(id, 'zzzz' + i, { custom_permalink: links[i] })]));
+  const { allProducts, BOOTSTRAP_IDS } = await import('./src/gumroad.js');
+  const links = Object.keys(BOOTSTRAP_IDS);
+  const byKey = Object.fromEntries(links.map((l, i) => [BOOTSTRAP_IDS[l], prod(BOOTSTRAP_IDS[l], 'zzzz' + i, { custom_permalink: l })]));
   shop({ links, products: [], sales: [], byKey });
   const out = await allProducts(ENV, {});
   assert.equal(out.coverage.complete, true, JSON.stringify(out.coverage));
@@ -428,15 +427,15 @@ await t('every bootstrapped id resolves to the permalink it claims', async () =>
 });
 
 await t('the copy view flattens HTML and keeps link targets', async () => {
-  const html = '<h2>Pass the CFA</h2><p>Study <strong>smarter</strong>.</p><ul><li>Item one</li><li>See <a href="https://notion.com" target="_blank">Notion</a></li></ul>';
-  shop({ links: ['aaaaa'], products: [], sales: [], byKey: { aaaaa: prod('p1', 'aaaaa', { description: html, custom_summary: 'CFA plan', formatted_price: 'CHF 0+' }) } });
+  const html = '<h2>Pass the exam</h2><p>Study <strong>smarter</strong>.</p><ul><li>Item one</li><li>See <a href="https://notion.com" target="_blank">Notion</a></li></ul>';
+  shop({ links: ['aaaaa'], products: [], sales: [], byKey: { aaaaa: prod('p1', 'aaaaa', { description: html, custom_summary: 'Exam plan', formatted_price: 'CHF 0+' }) } });
   const out = await findTool('gumroad_list_products').handler(ENV, { view: 'copy' });
   const d = out.products[0].description;
   assert.ok(!d.includes('<'), 'markup survived');
-  assert.ok(d.includes('Pass the CFA'));
+  assert.ok(d.includes('Pass the exam'));
   assert.ok(d.includes('- Item one'));
   assert.ok(d.includes('Notion (https://notion.com)'), d);
-  assert.equal(out.products[0].custom_summary, 'CFA plan');
+  assert.equal(out.products[0].custom_summary, 'Exam plan');
   assert.equal(out.products[0].price, 'CHF 0+');
 });
 
