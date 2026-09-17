@@ -1,0 +1,24 @@
+name = "offer-capture"
+main = "worker.js"
+compatibility_date = "2026-08-26"
+workers_dev = true
+
+[observability]
+enabled = true
+
+[vars]
+# Where a visitor lands after claiming the offer. Change it here, redeploy, done.
+OFFER_URL = "https://affiliate.notion.so/rw7o47pwsh6j"
+# Origins allowed to POST to /api/claim-offer. The first one is the CORS default.
+ALLOWED_ORIGINS = "https://www.anthonytoday.com,https://anthonytoday.com"
+# HubSpot EU portals use https://api.hubapi.eu instead.
+HUBSPOT_API_HOST = "https://api.hubapi.com"
+
+# Leads are written here with a 2-year TTL. Create with: wrangler kv namespace create LEADS
+[[kv_namespaces]]
+binding = "LEADS"
+id = "PASTE_KV_NAMESPACE_ID"
+
+# Secrets, set with `wrangler secret put`, never in this file:
+#   HUBSPOT_TOKEN   service key scoped crm.objects.contacts.write
+#   BLOCKLIST       comma-separated emails to accept but never store or sync
