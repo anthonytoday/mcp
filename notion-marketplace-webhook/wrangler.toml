@@ -1,0 +1,26 @@
+name = "notion-marketplace-webhook"
+main = "worker.js"
+compatibility_date = "2026-06-11"
+workers_dev = true
+
+[observability]
+enabled = true
+
+[vars]
+# Resend segment new downloaders are added to. Leave empty to skip segments.
+RESEND_SEGMENT_ID = ""
+
+# The Notion database that receives one row per download.
+NOTION_DB_ID = "PASTE_DOWNLOADS_DATABASE_ID"
+
+# The listings database, so each download row can relate to its listing
+# (matched on a rich-text property called Slug). Optional.
+NOTION_TRACKER_DB_ID = ""
+
+# Set only once the Resend automation exists and is published.
+# RESEND_EVENT_NAME = "template.downloaded"
+
+# Secrets, set with `wrangler secret put`, never in this file:
+#   NOTION_TOKEN
+#   RESEND_API_KEY
+#   GSHEET_WEBHOOK_URL
