@@ -1,13 +1,13 @@
 # gumroad-mcp
 
-The Gumroad shop exposed to Claude (and Notion AI) as an MCP server, running on Cloudflare Workers. 19 tools covering products, sales, offer codes, subscribers, payouts and webhooks, with bulk operations across the whole catalog. 23 offline tests, no network required to run them.
+The Gumroad shop exposed to Claude (and Notion AI) as an MCP server, running on Cloudflare Workers. 19 tools covering products, sales, offer codes, subscribers, payouts and webhooks, with bulk operations across the whole catalog. 42 offline tests, no network required to run them.
 
 - `src/` is the source of truth. `index.js` routes, `mcp.js` speaks JSON-RPC, `tools.js` defines the tools, `gumroad.js` talks to the API.
 - Stateless Streamable HTTP: every `POST /mcp` is self-contained, so Claude and Notion can share one Worker.
 
 ## Top 5 use cases
 
-1. **Proofread the whole catalog in one pass.** `gumroad_list_products` with `view: "copy"` returns every name, summary and description as plain text with links intact, so an AI can spot typos, dead links and outdated prices across 60 products in one conversation.
+1. **Proofread the whole catalog in one pass.** `gumroad_list_products` with `view: "copy"` returns every name, summary and description as plain text with links intact, so an AI can spot typos, dead links and outdated prices across dozens of products in one conversation.
 2. **Bulk price or currency changes.** `gumroad_bulk_update_products` with a filter (`free`, `tag`, `name_contains`, `max_sales`) and a patch. Dry-run by default, one result row per product.
 3. **Publish or unpublish a set at once.** Take a seasonal bundle down, or relaunch everything tagged `exam-prep`, with `gumroad_bulk_set_published`.
 4. **Revenue questions in plain English.** `gumroad_list_sales` with `summary_only: true` returns gross, fees, refunds, disputes and revenue per product for any date range.
@@ -27,7 +27,7 @@ The Gumroad shop exposed to Claude (and Notion AI) as an MCP server, running on 
 
 ```bash
 npm install
-npm test                                       # 23 offline tests
+npm test                                       # 42 offline tests
 npx wrangler kv namespace create CATALOG       # paste the id into wrangler.toml
 npx wrangler secret put GUMROAD_ACCESS_TOKEN   # Gumroad, Settings, Advanced, Applications
 npx wrangler secret put MCP_AUTH_TOKEN         # a long random string, keep a copy
@@ -46,7 +46,7 @@ Open `https://gumroad-mcp.<subdomain>.workers.dev/` and confirm both secrets rea
 
 ## Why the catalog walk exists
 
-Gumroad's `GET /products` returns at most 10 products and documents no pagination. `GET /user` lists every permalink, but `GET /products/:custom-permalink` returns "not found". The Worker resolves the rest by mining product cross-references and walking `/sales`, caches the permalink-to-id map in KV, and reports `coverage` honestly on every call. The one combination the API cannot surface at all (custom permalink, outside the 10 newest, zero sales) is handled by `gumroad_seed_product_ids`, which takes the id from the dashboard URL once.
+Gumroad's `GET /products` returns at most 10 products and documents no pagination. `GET /user` lists every permalink, but `GET /products/:custom-permalink` returns "not found". The Worker resolves the rest by mining product cross-references and walking `/sales`, caches the permalink-to-id map in KV, and reports `coverage` honestly on every call. The one combination the API cannot surface at all (custom permalink, outside the 10 newest, zero sales) is handled by `gumroad_seed_product_ids`, which takes the id from the dashboard URL once, or by `BOOTSTRAP_IDS` in `src/gumroad.js` before deploying.
 
 ## Endpoint provenance
 

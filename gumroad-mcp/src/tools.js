@@ -179,7 +179,7 @@ const TOOLS = [
           items: {
             type: 'object',
             properties: {
-              permalink: { type: 'string', description: 'The permalink as /user reports it, for example AQA-Chemistry-Flashcards.' },
+              permalink: { type: 'string', description: 'The permalink as /user reports it, for example My-Custom-Permalink.' },
               product_id: { type: 'string', description: 'The product id from the dashboard URL.' },
             },
             required: ['permalink', 'product_id'],
