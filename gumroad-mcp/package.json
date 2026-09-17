@@ -1,0 +1,27 @@
+{
+  "name": "gumroad-mcp",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Cloudflare Worker exposing the Gumroad API v2 to Claude as an MCP server. Bearer-protected /mcp endpoint, token held as a Worker secret.",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail",
+    "check": "node --check src/index.js && node --check src/gumroad.js && node --check src/mcp.js && node --check src/tools.js",
+    "test": "node _test.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  },
+  "cloudflare": {
+    "bindings": {
+      "GUMROAD_ACCESS_TOKEN": {
+        "description": "Your Gumroad account access token. Gumroad, Settings, Advanced, Applications."
+      },
+      "MCP_AUTH_TOKEN": {
+        "description": "A long random string. Claude and Notion present this as a bearer token to reach /mcp. Keep a copy."
+      }
+    }
+  }
+}
