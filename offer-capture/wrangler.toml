@@ -14,11 +14,12 @@ ALLOWED_ORIGINS = "https://www.anthonytoday.com,https://anthonytoday.com"
 # HubSpot EU portals use https://api.hubapi.eu instead.
 HUBSPOT_API_HOST = "https://api.hubapi.com"
 
-# Leads are written here with a 2-year TTL. Create with: wrangler kv namespace create LEADS
+# Leads are written here with a 2-year TTL. A KV namespace id is an identifier,
+# not a credential. Forking this repo: create your own with `wrangler kv namespace create LEADS`.
 [[kv_namespaces]]
 binding = "LEADS"
-id = "PASTE_KV_NAMESPACE_ID"
+id = "9963dd03f3eb44a19167855c8cd5973a"
 
-# Secrets, set with `wrangler secret put`, never in this file:
+# Secrets, set with `wrangler secret put` or in the dashboard, never in this file:
 #   HUBSPOT_TOKEN   service key scoped crm.objects.contacts.write
 #   BLOCKLIST       comma-separated emails to accept but never store or sync

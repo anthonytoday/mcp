@@ -9,13 +9,14 @@ preview_urls = false
 [observability]
 enabled = true
 
-# Two secrets, both set with `wrangler secret put`. Neither belongs in this file.
+# Two secrets, both set with `wrangler secret put` or in the dashboard. Neither belongs in this file.
 #   GUMROAD_ACCESS_TOKEN  the account-wide Gumroad token
 #   MCP_AUTH_TOKEN        the bearer Claude presents to reach /mcp
 
 # Caches the permalink-to-id map and the sales-walk cursor. /products caps at
 # 10 and custom permalinks do not resolve, so the full catalog is discovered
-# once and then read from here. Create with: wrangler kv namespace create CATALOG
+# once and then read from here. A KV namespace id is an identifier, not a
+# credential. Forking this repo: create your own with `wrangler kv namespace create CATALOG`.
 [[kv_namespaces]]
 binding = "CATALOG"
-id = "PASTE_KV_NAMESPACE_ID"
+id = "b659e57707164a2fbabf74b0ffc543f8"
